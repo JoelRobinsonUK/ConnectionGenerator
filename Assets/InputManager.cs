@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Networking;
 
 public class InputManager : MonoBehaviour
 {
     [SerializeField] TMP_InputField forename, surname;
-    [SerializeField] TMP_Dropdown trait1, trait2, trait3;
+    [SerializeField] TMP_Dropdown trait, flaw;
     [SerializeField] Slider connections, seperation;
     [SerializeField] Toggle pos, neut, neg, rom;
 
-    public string protagForename, protagSurname;
-    public float pTrait1, pTrait2, pTrait3, conAm, degSep;
+    public static string protagForename, protagSurname;
+    public float pTrait, pFlaw, conAm, degSep;
     public bool posRel, neutRel, negRel, romRel;
 
     public void UpdateName()
@@ -23,9 +24,8 @@ public class InputManager : MonoBehaviour
 
     public void UpdateTraits()
     {
-        pTrait1 = trait1.value;
-        pTrait2 = trait2.value;
-        pTrait3 = trait3.value;
+        pTrait = trait.value;
+        pFlaw = flaw.value;
     }
 
     public void UpdateModifiers()
@@ -42,5 +42,41 @@ public class InputManager : MonoBehaviour
         romRel = rom.isOn ? true : false;
 
     }
+
+    public void PopulateDropdown()
+    {
+        trait.ClearOptions();
+        trait.AddOptions(DataManager.traits);
+
+        flaw.ClearOptions();
+        flaw.AddOptions(DataManager.flaws);
+    }
+
+     public void CheckNamesExist(string check)
+    {
+        var protagName = this.GetType().GetField(check).GetValue(this).ToString();
+
+        bool addName = true;
+
+        foreach(string name in DataManager.forenames)
+        {
+            if (protagName.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)) {
+                addName = false;
+                break;
+            }
+            else
+            {
+                addName = true;
+            }
+        }
+
+        if (addName)
+        {
+            //StartCoroutine(Requests.SendRequest(protagName));
+            print("coroutine commented out");
+        }
+
+    }
+     
 
 }
