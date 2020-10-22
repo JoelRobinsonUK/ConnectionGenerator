@@ -7,19 +7,23 @@ using UnityEngine.Networking;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager instance;
+
+    [SerializeField] TMP_Text protagText, degSepText, conAmText;
     [SerializeField] TMP_InputField forename, surname;
     [SerializeField] TMP_Dropdown trait, flaw;
     [SerializeField] Slider connections, seperation;
     [SerializeField] Toggle pos, neut, neg, rom;
 
     public static string protagForename, protagSurname;
-    public float pTrait, pFlaw, conAm, degSep;
+    public static float pTrait, pFlaw, conAm = 25, degSep = 3;
     public bool posRel, neutRel, negRel, romRel;
 
     public void UpdateName()
     {
         protagForename = forename.text;
         protagSurname = surname.text;
+        protagText.text = protagForename + "\n" + protagSurname;
     }
 
     public void UpdateTraits()
@@ -32,6 +36,30 @@ public class InputManager : MonoBehaviour
     {
         conAm = connections.value;
         degSep = seperation.value;
+
+        degSepText.text = degSep.ToString();
+        conAmText.text = conAm.ToString();
+
+        switch (degSep)
+        {
+            case 1:
+                connections.maxValue = 8;
+                break;
+            case 2:
+                connections.maxValue = 24;
+                break;
+            case 3:
+                connections.maxValue = 56;
+                break;
+            case 4:
+                connections.maxValue = 120;
+                break;
+            case 5:
+                connections.maxValue = 248;
+                break;
+        }
+
+        
     }
 
     public void UpdateRelationships()
