@@ -28,7 +28,24 @@ public class Character : MonoBehaviour
         text.text = forename + "\n" + surname;
     }
 
-    private void Update()
+    public void Hover()
     {
+        GameObject info = GameObject.Find("Info Container");
+        TMP_Text nameText = GameObject.Find("Name Info").GetComponent<TMP_Text>();
+        TMP_Text traitsText = GameObject.Find("Traits Info").GetComponent<TMP_Text>();
+        TMP_Text flawsText = GameObject.Find("Flaws Info").GetComponent<TMP_Text>();
+
+        nameText.text = forename + " " + surname;
+        traitsText.text = traits[0] + "\n" + traits[1] + "\n" + traits[2];
+        flawsText.text = flaws[0] + "\n" + flaws[1] + "\n" + flaws[2];
+
+        info.transform.localScale = Vector3.one;
+    }
+
+    public void Exit()
+    {
+        GameObject info = GameObject.Find("Info Container");
+
+        info.transform.localScale = Vector3.zero;
     }
 }

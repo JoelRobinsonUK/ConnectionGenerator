@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
 
 public class UIManager : MonoBehaviour
 {
-    List<GameObject> nodes;
+    List<GameObject> nodes, activeNodes;
 
-    [SerializeField] GameObject character, displayPanel;
+    [SerializeField] GameObject character, line, displayPanel;
     private void Start()
     {
         GameObject.Find("Start Screen").GetComponent<Transform>().localScale = Vector3.one;
@@ -14,6 +15,7 @@ public class UIManager : MonoBehaviour
         GameObject.Find("Main Screen").GetComponent<Transform>().localScale = Vector3.zero;
 
         nodes = GameObject.Find("Position Manager").GetComponent<Nodes>().nodes;
+        activeNodes = new List<GameObject>();
     }
 
     public void GetStarted()
@@ -47,6 +49,12 @@ public class UIManager : MonoBehaviour
             node.SetActive(false);
         }
 
+        var lines = new List<GameObject>();
+        foreach (Transform child in GameObject.Find("Line Container").transform) lines.Add(child.gameObject);
+        lines.ForEach(child => Destroy(child));
+
+        activeNodes.Clear();
+
         int count = 0;
 
         while(count < InputManager.conAm)
@@ -57,7 +65,37 @@ public class UIManager : MonoBehaviour
             {
                 nodes[node].SetActive(true);
                 nodes[node].GetComponent<Character>().Set();
-                print(node);
+                activeNodes.Add(nodes[node]);
+
+                GameObject newLine = Instantiate(line, GameObject.Find("Line Container").transform);
+
+                if (node <= 7)
+                {
+                    
+                    newLine.GetComponent<UILineRenderer>().Points[0] = nodes[node].GetComponent<RectTransform>().anchoredPosition;
+                    newLine.GetComponent<UILineRenderer>().Points[1] = Vector2.zero;
+                    newLine.GetComponent<UILineRenderer>().color = InputManager.linkColours[Random.Range(0, InputManager.linkColours.Count - 1)];
+                } 
+                else if (node >= 8 && node < 23)
+                {
+                    newLine.GetComponent<UILineRenderer>().Points[0] = nodes[node].GetComponent<RectTransform>().anchoredPosition;
+
+                    int targetNode;
+
+                    do
+                    {
+                        targetNode = Random.Range(7, Mathf.RoundToInt(GameObject.Find("Input Manager").GetComponent<InputManager>().connections.maxValue - 1));
+
+                        newLine.GetComponent<UILineRenderer>().Points[1] = activeNodes[Random.Range(0, activeNodes.Count)].GetComponent<RectTransform>().anchoredPosition;
+                    } 
+                    while (!nodes[targetNode].activeInHierarchy);
+
+                    
+                }
+
+                newLine.GetComponent<Renderer>().material.color = InputManager.linkColours[Random.Range(0, InputManager.linkColours.Count - 1)];
+
+
                 count++;
             }
         }

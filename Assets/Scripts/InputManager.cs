@@ -17,7 +17,16 @@ public class InputManager : MonoBehaviour
 
     public static string protagForename, protagSurname;
     public static float pTrait, pFlaw, conAm = 25, degSep = 3;
-    public bool posRel, neutRel, negRel, romRel;
+    public bool posRel = true, neutRel = true, negRel = true, romRel = true;
+    public static List<Color> linkColours = new List<Color>();
+
+    private void Start()
+    {
+        linkColours.Add(new Color(76, 200, 63));
+        linkColours.Add(new Color(212, 207, 41));
+        linkColours.Add(new Color(212, 57, 41));
+        linkColours.Add(new Color(195, 62, 188));
+    }
 
     public void UpdateName()
     {
@@ -64,10 +73,17 @@ public class InputManager : MonoBehaviour
 
     public void UpdateRelationships()
     {
+        linkColours.Clear();
+
         posRel =  pos.isOn ? true : false;
         neutRel = neut.isOn ? true : false;
         negRel = neg.isOn ? true : false;
         romRel = rom.isOn ? true : false;
+
+        if (posRel) linkColours.Add(new Color(76, 200, 63));
+        if (neutRel) linkColours.Add(new Color(212, 207, 41));
+        if (negRel) linkColours.Add(new Color(212, 57, 41));
+        if (romRel) linkColours.Add(new Color(195, 62, 188));
 
     }
 
