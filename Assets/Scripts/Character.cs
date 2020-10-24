@@ -12,7 +12,7 @@ public class Character : MonoBehaviour
     public string[] traits = new string[3];
     public string[] flaws = new string[3];
 
-    private void Awake()
+    public void Set()
     {
         forename = DataManager.forenames[Random.Range(0, DataManager.forenames.Count -1)];
         surname = DataManager.surnames[Random.Range(0, DataManager.surnames.Count -1)];

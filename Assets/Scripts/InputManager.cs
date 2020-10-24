@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] TMP_Text protagText, degSepText, conAmText;
     [SerializeField] TMP_InputField forename, surname;
     [SerializeField] TMP_Dropdown trait, flaw;
-    [SerializeField] Slider connections, seperation;
+    [SerializeField] public Slider connections, seperation;
     [SerializeField] Toggle pos, neut, neg, rom;
 
     public static string protagForename, protagSurname;

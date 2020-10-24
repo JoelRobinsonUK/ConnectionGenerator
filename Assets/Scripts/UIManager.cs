@@ -42,12 +42,24 @@ public class UIManager : MonoBehaviour
 
     public void GenerateCharacters()
     {
-        for(int i=0; i < InputManager.conAm; i++)
+        foreach(GameObject node in nodes)
         {
-            int node = Random.Range(0, Mathf.RoundToInt(8 * InputManager.degSep));
-            nodes[node].SetActive(true);
-            nodes.RemoveAt(node);
+            node.SetActive(false);
         }
-        print(InputManager.conAm);
+
+        int count = 0;
+
+        while(count < InputManager.conAm)
+        {
+            int node = Random.Range(0, Mathf.RoundToInt(GameObject.Find("Input Manager").GetComponent<InputManager>().connections.maxValue - 1));
+
+            if (!nodes[node].activeInHierarchy)
+            {
+                nodes[node].SetActive(true);
+                nodes[node].GetComponent<Character>().Set();
+                print(node);
+                count++;
+            }
+        }
     }
 }
