@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Profiling.Memory.Experimental;
+//using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class Requests : MonoBehaviour
 {
-    string[] targets = {"firstname","surname","trait", "flaws"};
+    string[] targets = {"firstnames","surnames","traits", "flaws"};
 
     void Start()
     {
@@ -77,18 +77,21 @@ public class Requests : MonoBehaviour
         }
     }
 
-    public static IEnumerator SendRequest(string name)
+    public static IEnumerator SendRequest(string name, string target)
     {
-        var jsonData = JsonUtility.ToJson(name);
-        UnityWebRequest www = UnityWebRequest.Post("https://hackspace-api.herokuapp.com/firstname", jsonData);
+        UnityWebRequest www = UnityWebRequest.Put("https://hackspace-api.herokuapp.com/" + target + "s", "{\"" + target + "\": \"" + name + "\"}");
         {
-            www.method = UnityWebRequest.kHttpVerbPOST;
             www.SetRequestHeader("Content-Type", "application/json");
-            www.SetRequestHeader("Accept", "application/json");
-            www.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(jsonData));
-            print("request sent");
             yield return www.SendWebRequest();
 
+            if (www.isNetworkError)
+            {
+                Debug.Log("Error While Sending" + www.error);
+            }
+            else
+            {
+                Debug.Log("Received" + www.downloadHandler.text);
+            }
         }
     }
 

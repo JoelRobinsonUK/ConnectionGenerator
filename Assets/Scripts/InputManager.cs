@@ -18,14 +18,14 @@ public class InputManager : MonoBehaviour
     public static string protagForename, protagSurname;
     public static float pTrait, pFlaw, conAm = 25, degSep = 3;
     public bool posRel = true, neutRel = true, negRel = true, romRel = true;
-    public static List<Color> linkColours = new List<Color>();
+    public static List<string> linkColours = new List<string>();
 
     private void Start()
     {
-        linkColours.Add(new Color(76, 200, 63));
-        linkColours.Add(new Color(212, 207, 41));
-        linkColours.Add(new Color(212, 57, 41));
-        linkColours.Add(new Color(195, 62, 188));
+        linkColours.Add("pos");
+        linkColours.Add("neut");
+        linkColours.Add("neg");
+        linkColours.Add("rom");
     }
 
     public void UpdateName()
@@ -80,10 +80,10 @@ public class InputManager : MonoBehaviour
         negRel = neg.isOn ? true : false;
         romRel = rom.isOn ? true : false;
 
-        if (posRel) linkColours.Add(new Color(76, 200, 63));
-        if (neutRel) linkColours.Add(new Color(212, 207, 41));
-        if (negRel) linkColours.Add(new Color(212, 57, 41));
-        if (romRel) linkColours.Add(new Color(195, 62, 188));
+        if (posRel) linkColours.Add("pos");
+        if (neutRel) linkColours.Add("neut");
+        if (negRel) linkColours.Add("neg");
+        if (romRel) linkColours.Add("rom");
 
     }
 
@@ -96,28 +96,44 @@ public class InputManager : MonoBehaviour
         flaw.AddOptions(DataManager.flaws);
     }
 
-     public void CheckNamesExist(string check)
+     public void CheckNamesExist()
     {
-        var protagName = this.GetType().GetField(check).GetValue(this).ToString();
 
-        bool addName = true;
+        bool addFore = true, addSur = true;
 
         foreach(string name in DataManager.forenames)
         {
-            if (protagName.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)) {
-                addName = false;
+            if (protagForename.Equals(name, System.StringComparison.InvariantCultureIgnoreCase)) {
+                addFore = false;
                 break;
             }
             else
             {
-                addName = true;
+                addFore = true;
             }
         }
 
-        if (addName)
+        if (addFore)
         {
-            //StartCoroutine(Requests.SendRequest(protagName));
-            print("coroutine commented out");
+            StartCoroutine(Requests.SendRequest(protagForename, "firstname"));
+        }
+
+        foreach (string name in DataManager.surnames)
+        {
+            if (protagSurname.Equals(name, System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                addSur = false;
+                break;
+            }
+            else
+            {
+                addSur = true;
+            }
+        }
+
+        if (addSur)
+        {
+            StartCoroutine(Requests.SendRequest(protagSurname, "surname"));
         }
 
     }

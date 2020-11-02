@@ -68,13 +68,25 @@ public class UIManager : MonoBehaviour
                 activeNodes.Add(nodes[node]);
 
                 GameObject newLine = Instantiate(line, GameObject.Find("Line Container").transform);
+                string setColor = InputManager.linkColours[Random.Range(0, InputManager.linkColours.Count)];
+
+                print(setColor);
+
+                if (setColor == "pos") { newLine.GetComponent<UILineRenderer>().color = new Color(0, 255, 0); }
+
+                if (setColor == "neut") { newLine.GetComponent<UILineRenderer>().color = new Color(200, 200, 0); }
+
+                if (setColor == "neg") { newLine.GetComponent<UILineRenderer>().color = new Color(255, 0, 0); }
+
+                if (setColor == "rom") { newLine.GetComponent<UILineRenderer>().color = new Color(200, 0, 200); }
 
                 if (node <= 7)
                 {
                     
                     newLine.GetComponent<UILineRenderer>().Points[0] = nodes[node].GetComponent<RectTransform>().anchoredPosition;
                     newLine.GetComponent<UILineRenderer>().Points[1] = Vector2.zero;
-                    newLine.GetComponent<UILineRenderer>().color = InputManager.linkColours[Random.Range(0, InputManager.linkColours.Count - 1)];
+                    //newLine.GetComponent<UILineRenderer>().color = InputManager.linkColours[Random.Range(0, InputManager.linkColours.Count - 1)];
+                    
                 } 
                 else if (node >= 8 && node < 23)
                 {
@@ -93,8 +105,7 @@ public class UIManager : MonoBehaviour
                     
                 }
 
-                newLine.GetComponent<Renderer>().material.color = InputManager.linkColours[Random.Range(0, InputManager.linkColours.Count - 1)];
-
+                
 
                 count++;
             }
